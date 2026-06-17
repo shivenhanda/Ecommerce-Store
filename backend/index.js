@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
+import mongoose from 'mongoose'
 import { NewUser, WishListData, CartListData, Product, Order } from './Model.js'
 
 const app = express()
@@ -37,6 +38,8 @@ app.get("/api/profile", async (req, res) => {
 app.post("/api/SignUp", async (req, res) => {
     try {
         const { user, email, password } = req.body
+        console.log("BODY:", req.body);
+        console.log("Mongo:", mongoose.connection.readyState);
         let existingUser = await NewUser.findOne({
             $or: [{ user }, { email }]
         })
@@ -55,9 +58,11 @@ app.post("/api/SignUp", async (req, res) => {
             httpOnly: true
         })
         req.user=user
+        console.log("created User",user)
         return res.json({ success: true, message: "Signup Successfully",user:user })
     }
     catch (error) {
+        console.error(error);
         return res.json({ success: false, message: "Signup Not Completed" })
     }
 })
