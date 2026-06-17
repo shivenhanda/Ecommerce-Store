@@ -15,7 +15,7 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/profile", {
+    fetch("https://ecommerce-store-f5y1.vercel.app/api/profile", {
       method: "GET",
       credentials: "include"
     })
