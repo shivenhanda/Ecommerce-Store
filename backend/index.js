@@ -62,12 +62,12 @@ app.post("/api/SignUp", async (req, res) => {
     }
 })
 app.post("/api/Login", async (req, res) => {
-    const { user, password } = req.body
-    let existingUser = await NewUser.findOne({ user })
-    if (!existingUser) {
-        return res.json({ success: false, message: "Something is wrong" })
-    }
     try {
+        const { user, password } = req.body
+        let existingUser = await NewUser.findOne({ user })
+        if (!existingUser) {
+            return res.json({ success: false, message: "Something is wrong" })
+        }
         let match=await bcrypt.compare(password,existingUser.password)
         if(!match){
             return res.json({ success: false, message: "Something is wrong" })
