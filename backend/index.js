@@ -8,7 +8,10 @@ import { NewUser, WishListData, CartListData, Product, Order } from './Model.js'
 
 const app = express()
 
-app.use(cors());
+app.use(cors({
+  origin: "https://ecommerce-store-tmzs.vercel.app",
+  credentials: true
+}));
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.static(path.join(process.cwd(), "..", "frontend", "dist")))
