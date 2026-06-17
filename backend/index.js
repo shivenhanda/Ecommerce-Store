@@ -35,14 +35,14 @@ app.get("/api/profile", async (req, res) => {
 })
 
 app.post("/api/SignUp", async (req, res) => {
-    const { user, email, password } = req.body
-    let existingUser = await NewUser.findOne({
-        $or: [{ user }, { email }]
-    })
-    if (existingUser) {
-        return res.json({ success: false, message: "Something is wrong" })
-    }
     try {
+        const { user, email, password } = req.body
+        let existingUser = await NewUser.findOne({
+            $or: [{ user }, { email }]
+        })
+        if (existingUser) {
+            return res.json({ success: false, message: "Something is wrong" })
+        }
         let salt = await bcrypt.genSalt(10)
         let hashpassword = await bcrypt.hash(password, salt)
         await NewUser.create({
