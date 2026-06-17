@@ -12,7 +12,7 @@ export default function Login({ setUser, setForm }) {
   } = useForm()
   const onSubmit = async (data) => {
     try {
-      let res = await fetch("http://localhost:8000/api/Login", {
+      let res = await fetch("https://ecommerce-store-f5y1.vercel.app/api/Login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
