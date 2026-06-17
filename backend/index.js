@@ -5,10 +5,8 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
 import { NewUser, WishListData, CartListData, Product, Order } from './Model.js'
-import { log } from 'console'
 
 const app = express()
-const port = 8000
 
 app.use(cors());
 app.use(cookieParser())
@@ -21,7 +19,6 @@ function checkcookie(req,res,next){
         let decoded=jwt.verify(req.cookies.token,"secret")
         req.user=decoded;
     }}catch(error){
-        console.log("check cookies")
         req.user=null
     }
     next()
@@ -29,7 +26,6 @@ function checkcookie(req,res,next){
 
 app.get("/api/profile", async (req, res) => {
     if(req.user){
-        console.log("verify user")
         return res.json({success:true,user:req.user})
     }
     return res.json({success:false,user:null})
@@ -59,7 +55,6 @@ app.post("/api/SignUp", async (req, res) => {
         return res.json({ success: true, message: "Signup Successfully",user:user })
     }
     catch (error) {
-        console.log(error)
         return res.json({ success: false, message: "Signup Not Completed" })
     }
 })
@@ -82,7 +77,6 @@ app.post("/api/Login", async (req, res) => {
         return res.json({success:true,message:"Login Successfully",user:user})
     }
     catch (error) {
-        console.log(error)
         return res.json({ success: false, message: "Login Not Completed" })
     }
 })
@@ -215,6 +209,4 @@ app.get(/^\/(?!api).*/, (req, res) => {
     res.sendFile(path.join(process.cwd(), "..", "frontend", "dist", "index.html"));
 });
 
-app.listen(port, () => {
-    console.log("Available on localhost", port)
-})
+export default app;
