@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
+import "dotenv/config";
 const connectDB = async () => {
     try {
-        await mongoose.connect("mongodb://localhost:27017/EcommerceStore")
+        await mongoose.connect(process.env.MongoDB_URI)
     } catch (error) {
         console.log(error)
     }
