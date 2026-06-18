@@ -8,7 +8,7 @@ import mongoose from 'mongoose'
 import { NewUser, WishListData, CartListData, Product, Order } from './Model.js'
 
 const connectDB = async () => {
-    if(mongoose.connection.readyState===1){
+    if (mongoose.connection.readyState === 1) {
         return;
     }
     try {
@@ -22,29 +22,31 @@ const connectDB = async () => {
 const app = express()
 
 app.use(cors({
-  origin: "https://ecommerce-store-tmzs.vercel.app",
-  credentials: true
+    origin: "https://ecommerce-store-tmzs.vercel.app",
+    credentials: true
 }));
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.static(path.join(process.cwd(), "..", "frontend", "dist")))
 app.use(checkcookie)
 
-function checkcookie(req,res,next){
-    try{if(req.cookies.token){
-        let decoded=jwt.verify(req.cookies.token,"secret")
-        req.user=decoded;
-    }}catch(error){
-        req.user=null
+function checkcookie(req, res, next) {
+    try {
+        if (req.cookies.token) {
+            let decoded = jwt.verify(req.cookies.token, "secret")
+            req.user = decoded;
+        }
+    } catch (error) {
+        req.user = null
     }
     next()
 }
 
 app.get("/api/profile", async (req, res) => {
-    if(req.user){
-        return res.json({success:true,user:req.user})
+    if (req.user) {
+        return res.json({ success: true, user: req.user })
     }
-    return res.json({success:false,user:null})
+    return res.json({ success: false, user: null })
 })
 
 app.post("/api/SignUp", async (req, res) => {
@@ -70,9 +72,9 @@ app.post("/api/SignUp", async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true
         })
-        req.user=user
-        console.log("created User",user)
-        return res.json({ success: true, message: "Signup Successfully",user:user })
+        req.user = user
+        console.log("created User", user)
+        return res.json({ success: true, message: "Signup Successfully", user: user })
     }
     catch (error) {
         console.error(error);
@@ -87,16 +89,16 @@ app.post("/api/Login", async (req, res) => {
         if (!existingUser) {
             return res.json({ success: false, message: "Something is wrong" })
         }
-        let match=await bcrypt.compare(password,existingUser.password)
-        if(!match){
+        let match = await bcrypt.compare(password, existingUser.password)
+        if (!match) {
             return res.json({ success: false, message: "Something is wrong" })
         }
-        let token=jwt.sign({user},"secret")
-        res.cookie("token",token,{
-            httpOnly:true
+        let token = jwt.sign({ user }, "secret")
+        res.cookie("token", token, {
+            httpOnly: true
         })
-        req.user=user
-        return res.json({success:true,message:"Login Successfully",user:user})
+        req.user = user
+        return res.json({ success: true, message: "Login Successfully", user: user })
     }
     catch (error) {
         return res.json({ success: false, message: "Login Not Completed" })
@@ -105,7 +107,7 @@ app.post("/api/Login", async (req, res) => {
 
 app.post("/api/logout", (req, res) => {
     res.clearCookie("token");
-    res.json({success: true});
+    res.json({ success: true });
 });
 
 app.get("/api/wishlistData", async (req, res) => {
@@ -117,7 +119,7 @@ app.get("/api/wishlistData", async (req, res) => {
         }
         const data = await WishListData.findOne({ user });
         const wishlist = data?.wishlist || [];
-        return res.json({ success: true, wishlist:wishlist });
+        return res.json({ success: true, wishlist: wishlist });
     } catch (error) {
         return res.json({ success: false, message: error.message });
     }
@@ -134,7 +136,10 @@ app.post("/api/wishlistData", async (req, res) => {
         const data = await WishListData.findOneAndUpdate(
             { user },
             { wishlist },
-            { upsert: true }
+            {
+                upsert: true,
+                new: true
+            }
         );
         return res.json({ success: true });
     } catch (error) {
@@ -150,7 +155,7 @@ app.get("/api/cartData", async (req, res) => {
         }
         const data = await CartListData.findOne({ user });
         const cartlist = data?.cartlist || [];
-        return res.json({ success: true, cartlist:cartlist });
+        return res.json({ success: true, cartlist: cartlist });
     } catch (error) {
         return res.json({ success: false, message: error.message });
     }
@@ -168,7 +173,7 @@ app.post("/api/cartData", async (req, res) => {
             { user },
             { cartlist }
         );
-        return res.json({ success: true ,message:data});
+        return res.json({ success: true, message: data });
     } catch (error) {
         return res.json({ success: false, message: error.message });
     }
@@ -202,7 +207,7 @@ app.post("/api/checkout", async (req, res) => {
         const cartData = await CartListData.findOne({ user });
         const cartlist = cartData?.cartlist || [];
         if (cartlist.length === 0) return res.json({ success: false, message: "empty cart" });
-    
+
         const items = [];
         let total = 0;
         for (const item of cartlist) {
@@ -211,11 +216,11 @@ app.post("/api/checkout", async (req, res) => {
             items.push({ productId: item.id, qty: item.qty, price: product.price });
             total += product.price * item.qty;
         }
-        
+
         const newOrder = await Order.create({ user, items, total, address });
         // Clear cart
         await CartListData.findOneAndUpdate({ user }, { cartlist: [] });
-        
+
         res.json({ success: true, orderId: newOrder._id, total });
     } catch (error) {
         res.json({ success: false, message: error.message });
