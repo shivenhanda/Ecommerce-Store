@@ -8,6 +8,7 @@ export default function Header() {
     const { count } = useContext(wishListContext)
     const { cartList } = useContext(CartListContext)
     const { user, logout } = useAuth()
+    
     return (
         <>
             <div className=" md:flex md:justify-between md:px-10 px-3  my-2 text-center">
