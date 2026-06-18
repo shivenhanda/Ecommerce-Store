@@ -9,7 +9,7 @@ export default function ProductList({search}) {
     const totalPages = Math.ceil(products.length / itemPerPage)
     const navigate = useNavigate();
 
-    products=products.filter((product)=>
+    let filteredproducts=products.filter((product)=>
         product.title.toLowerCase().includes(search.toLowerCase())
     )
     useEffect(() => {
@@ -28,7 +28,7 @@ export default function ProductList({search}) {
     return (
         <>
             {
-                products.length > 0 &&
+                filteredproducts.length > 0 &&
                 <div className="products">
                     {products.slice((page - 1) * itemPerPage, page * itemPerPage).map((item) => {
                         return <div key={item.id} className="singleproduct" onClick={() => navigate(`/product/${item.id}`)}>
@@ -42,7 +42,7 @@ export default function ProductList({search}) {
                 </div>
             }
             {
-                products.length > 0 &&
+                filteredproducts.length > 0 &&
                 <div className="pagination">
                     <span className={page === 1 ? "disabledPage" : ""} onClick={() => pageHandle(page - 1)}><i className="fa-solid fa-arrow-left"></i></span>
                     {
