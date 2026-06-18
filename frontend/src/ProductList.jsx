@@ -6,12 +6,12 @@ export default function ProductList({search}) {
     const [products, setProducts] = useState([])
     const [page, setPage] = useState(1)
     const itemPerPage = 14
-    const totalPages = Math.ceil(products.length / itemPerPage)
     const navigate = useNavigate();
 
     let filteredproducts=products.filter((product)=>
         product.title.toLowerCase().includes(search.toLowerCase())
     )
+    const totalPages = Math.ceil(filteredproducts.length / itemPerPage)
     useEffect(() => {
         async function getProducts() {
             const data = await FetchProducts()
@@ -30,7 +30,7 @@ export default function ProductList({search}) {
             {
                 filteredproducts.length > 0 &&
                 <div className="products">
-                    {products.slice((page - 1) * itemPerPage, page * itemPerPage).map((item) => {
+                    {filteredproducts.slice((page - 1) * itemPerPage, page * itemPerPage).map((item) => {
                         return <div key={item.id} className="singleproduct" onClick={() => navigate(`/product/${item.id}`)}>
                             
                             <img src={item.thumbnail} alt={item.id} />
