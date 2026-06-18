@@ -11,6 +11,7 @@ import Checkout from "./context/Checkout"
 import OrderHistory from "./context/OrderHistory"
 import AuthProvider, { useAuth } from "./context/AuthContext"
 import ProductShow from "./ProductShow"
+import { useState } from "react"
 
 export default function App() {
   return (
