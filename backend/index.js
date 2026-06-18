@@ -7,6 +7,18 @@ import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 import { NewUser, WishListData, CartListData, Product, Order } from './Model.js'
 
+const connectDB = async () => {
+    if(mongoose.connection.readyState===1){
+        return;
+    }
+    try {
+        console.log("URI exists:", !!process.env.MongoDB_URI);
+        await mongoose.connect(process.env.MongoDB_URI)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 const app = express()
 
 app.use(cors({
@@ -38,6 +50,7 @@ app.get("/api/profile", async (req, res) => {
 app.post("/api/SignUp", async (req, res) => {
     try {
         const { user, email, password } = req.body
+        await connectDB()
         console.log("BODY:", req.body);
         console.log("Mongo:", mongoose.connection.readyState);
         let existingUser = await NewUser.findOne({
@@ -69,6 +82,7 @@ app.post("/api/SignUp", async (req, res) => {
 app.post("/api/Login", async (req, res) => {
     try {
         const { user, password } = req.body
+        await connectDB()
         let existingUser = await NewUser.findOne({ user })
         if (!existingUser) {
             return res.json({ success: false, message: "Something is wrong" })
@@ -97,6 +111,7 @@ app.post("/api/logout", (req, res) => {
 app.get("/api/wishlistData", async (req, res) => {
     try {
         const user = req.user?.user;
+        await connectDB()
         if (!user) {
             return res.json({ success: false, message: "no user" });
         }
@@ -111,6 +126,7 @@ app.get("/api/wishlistData", async (req, res) => {
 app.post("/api/wishlistData", async (req, res) => {
     try {
         const user = req.user?.user;
+        await connectDB()
         if (!user) {
             return res.json({ success: false, message: "no user" });
         }
@@ -128,6 +144,7 @@ app.post("/api/wishlistData", async (req, res) => {
 app.get("/api/cartData", async (req, res) => {
     try {
         const user = req.user?.user;
+        await connectDB()
         if (!user) {
             return res.json({ success: false, message: "no user" });
         }
@@ -142,6 +159,7 @@ app.get("/api/cartData", async (req, res) => {
 app.post("/api/cartData", async (req, res) => {
     try {
         const user = req.user?.user;
+        await connectDB()
         if (!user) {
             return res.json({ success: false, message: "no user" });
         }
@@ -158,6 +176,7 @@ app.post("/api/cartData", async (req, res) => {
 
 app.get("/api/products", async (req, res) => {
     try {
+        await connectDB()
         let products = await Product.find({});
         if (products.length === 0) {
             const mockData = [
@@ -177,6 +196,7 @@ app.get("/api/products", async (req, res) => {
 app.post("/api/checkout", async (req, res) => {
     try {
         const user = req.user?.user;
+        await connectDB()
         if (!user) return res.json({ success: false, message: "no user" });
         const { address } = req.body;
         const cartData = await CartListData.findOne({ user });
@@ -205,6 +225,7 @@ app.post("/api/checkout", async (req, res) => {
 app.get("/api/orders", async (req, res) => {
     try {
         const user = req.user?.user;
+        await connectDB()
         if (!user) return res.json({ success: false, message: "no user" });
         const orders = await Order.find({ user }).sort({ date: -1 });
         res.json({ success: true, orders });
