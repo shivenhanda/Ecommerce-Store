@@ -2,13 +2,16 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import FetchProducts from "./api/FetchProducts"
 
-export default function ProductList() {
+export default function ProductList({search}) {
     const [products, setProducts] = useState([])
     const [page, setPage] = useState(1)
     const itemPerPage = 14
     const totalPages = Math.ceil(products.length / itemPerPage)
     const navigate = useNavigate();
 
+    products=products.filter((product)=>
+        product.title.toLowerCase().includes(search.toLowerCase())
+    )
     useEffect(() => {
         async function getProducts() {
             const data = await FetchProducts()

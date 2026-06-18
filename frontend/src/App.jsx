@@ -22,14 +22,14 @@ export default function App() {
 
 function Content() {
   const { loading } = useAuth();
-
+  const [search,setSearch]=useState("")
   return (
     <>
       <CartProvider>
         <WishListProvider>
-          <Header />
+          <Header setSearch={setSearch}/>
           <Routes>
-            <Route path="/" element={<ProductList />} />
+            <Route path="/" element={<ProductList search={search}/>} />
             <Route path="/wishlist" element={<WishListPage />} />
             <Route path="/product/:id" element={<ProductShow />} />
             <Route path="/cart" element={<CartPage />} />
