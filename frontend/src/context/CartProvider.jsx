@@ -10,6 +10,7 @@ export default function CartProvider({ children }) {
     const [cartList, setCartList] = useState([]);
     const [product, setProduct] = useState([]);
     const [width, setWidth] = useState(window.innerWidth);
+    const [cartLoaded, setCartLoaded] = useState(false);
 
     function addToCart(productId, qty = 1) {
         setCartList(prev => {
@@ -55,7 +56,12 @@ export default function CartProvider({ children }) {
 
     useEffect(() => {
         async function fetchCart() {
-            if (!user || !navigator.onLine) return;
+            if (!user || !navigator.onLine) {
+                setCartList([]);
+                setProduct([]);
+                setCartLoaded(false);
+                return;
+            }
             try {
                 const res = await fetch("https://ecommerce-store-f5y1.vercel.app/api/cartData", {
                     method: "GET",
@@ -63,9 +69,9 @@ export default function CartProvider({ children }) {
                 });
                 const data = await res.json();
                 if (data.success) {
-                    console.log("data.cartlist",data.cartlist)
                     setCartList(data.cartlist || []);
                 }
+                setCartLoaded(true);
             } catch (error) {
                 console.log("fetch cart error", error);
             }
@@ -74,10 +80,9 @@ export default function CartProvider({ children }) {
     }, [user]);
 
     useEffect(() => {
+        if (!cartLoaded) return;
         async function syncCart() {
             if (!user || !navigator.onLine) return;
-            console.log("sync cart", user)
-            console.log("cardlist",cartList)
             try {
                 let res = await fetch("https://ecommerce-store-f5y1.vercel.app/api/cartData", {
                     method: "POST",
@@ -93,13 +98,12 @@ export default function CartProvider({ children }) {
                 if (!res.success) {
                     console.log(res.message)
                 }
-                console.log(res.success, res.message)
             } catch (error) {
                 console.log("error", error);
             }
         }
         syncCart();
-    }, [cartList]);
+    }, [cartList, cartLoaded, user]);
 
     return (
         <CartListContext.Provider value={{ cartList, addToCart, removeFromCart, updateQty, width, product }}>

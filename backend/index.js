@@ -176,7 +176,11 @@ app.post("/api/cartData", async (req, res) => {
         console.log("backend",cartlist)
         const data = await CartListData.findOneAndUpdate(
             { user },
-            { cartlist }
+            { cartlist },
+            {
+                upsert:true,
+                new:true
+            }
         );
         console.log(data)
         return res.json({ success: true, message: data });
