@@ -34,7 +34,7 @@ export default function WishListProvider({ children }) {
         async function fetchWishlist() {
             if (!user || !navigator.onLine) return;
             try {
-                const res = await fetch("http://localhost:8000/api/wishlistData", {
+                const res = await fetch("https://ecommerce-store-f5y1.vercel.app/api/wishlistData", {
                     method: "GET"
                 });
                 const data = await res.json();
@@ -53,7 +53,7 @@ export default function WishListProvider({ children }) {
         async function syncWishlist() {
             if (!user || !navigator.onLine) return;
             try {
-                let res = await fetch("http://localhost:8000/api/wishlistData", {
+                let res = await fetch("https://ecommerce-store-f5y1.vercel.app/api/wishlistData", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

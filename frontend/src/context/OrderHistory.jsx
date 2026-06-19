@@ -6,7 +6,7 @@ export default function OrderHistory() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/orders", {
+        fetch("https://ecommerce-store-f5y1.vercel.app/api/orders", {
             credentials: "include"
         })
         .then(res => res.json())

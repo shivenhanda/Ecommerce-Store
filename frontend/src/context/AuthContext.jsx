@@ -32,7 +32,7 @@ export default function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await fetch("http://localhost:8000/api/logout", {
+      await fetch("https://ecommerce-store-f5y1.vercel.app/api/logout", {
         method: "POST",
         credentials: "include"
       });

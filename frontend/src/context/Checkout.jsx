@@ -13,7 +13,7 @@ export default function Checkout() {
         const formData = new FormData(e.target);
         const address = formData.get('address');
         try {
-            const res = await fetch("http://localhost:8000/api/checkout", {
+            const res = await fetch("https://ecommerce-store-f5y1.vercel.app/api/checkout", {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

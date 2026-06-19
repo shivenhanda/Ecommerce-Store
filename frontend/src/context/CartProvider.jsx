@@ -57,7 +57,7 @@ export default function CartProvider({ children }) {
         async function fetchCart() {
             if (!user || !navigator.onLine) return;
             try {
-                const res = await fetch("http://localhost:8000/api/cartData", {
+                const res = await fetch("https://ecommerce-store-f5y1.vercel.app/api/cartData", {
                     method: "GET",
                     credentials: "include"
                 });
@@ -78,7 +78,7 @@ export default function CartProvider({ children }) {
             if (!user || !navigator.onLine) return;
             console.log("sync cart", user)
             try {
-                let res = await fetch("http://localhost:8000/api/cartData", {
+                let res = await fetch("https://ecommerce-store-f5y1.vercel.app/api/cartData", {
                     method: "POST",
                     credentials: "include",
                     headers: {
