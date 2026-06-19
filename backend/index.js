@@ -173,10 +173,12 @@ app.post("/api/cartData", async (req, res) => {
             return res.json({ success: false, message: "no user" });
         }
         const { cartlist } = req.body;
+        console.log("backend",cartlist)
         const data = await CartListData.findOneAndUpdate(
             { user },
             { cartlist }
         );
+        console.log(data)
         return res.json({ success: true, message: data });
     } catch (error) {
         return res.json({ success: false, message: error.message });

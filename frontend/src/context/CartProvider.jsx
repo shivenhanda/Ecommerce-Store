@@ -77,6 +77,7 @@ export default function CartProvider({ children }) {
         async function syncCart() {
             if (!user || !navigator.onLine) return;
             console.log("sync cart", user)
+            console.log("cardlist",cartList)
             try {
                 let res = await fetch("https://ecommerce-store-f5y1.vercel.app/api/cartData", {
                     method: "POST",
