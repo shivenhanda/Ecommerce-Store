@@ -12,7 +12,6 @@ const connectDB = async () => {
         return;
     }
     try {
-        console.log("URI exists:", !!process.env.MongoDB_URI);
         await mongoose.connect(process.env.MongoDB_URI)
     } catch (error) {
         console.log(error)
@@ -53,8 +52,6 @@ app.post("/api/SignUp", async (req, res) => {
     try {
         const { user, email, password } = req.body
         await connectDB()
-        console.log("BODY:", req.body);
-        console.log("Mongo:", mongoose.connection.readyState);
         let existingUser = await NewUser.findOne({
             $or: [{ user }, { email }]
         })
@@ -70,10 +67,11 @@ app.post("/api/SignUp", async (req, res) => {
         })
         let token = jwt.sign({ user }, "secret")
         res.cookie("token", token, {
-            httpOnly: true
+            httpOnly: true,
+            secure:true,
+            sameSite:"none"
         })
         req.user = user
-        console.log("created User", user)
         return res.json({ success: true, message: "Signup Successfully", user: user })
     }
     catch (error) {
@@ -95,7 +93,9 @@ app.post("/api/Login", async (req, res) => {
         }
         let token = jwt.sign({ user }, "secret")
         res.cookie("token", token, {
-            httpOnly: true
+            httpOnly: true,
+            secure:true,
+            sameSite:"none"
         })
         req.user = user
         return res.json({ success: true, message: "Login Successfully", user: user })
