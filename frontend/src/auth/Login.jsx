@@ -47,6 +47,14 @@ focus:ring-2 focus:ring-indigo-500 focus:outline-none transition" />
         {errors.password && <span className="text-red-600 text-sm mt-1 block">This is required field</span>}
         <button className="w-80 bg-indigo-600 hover:bg-indigo-700 transition 
 rounded-xl text-center p-2 text-white font-semibold">Login</button>
+        <button
+          onClick={() => {
+            window.location.href =
+              "https://ecommerce-store-f5y1.vercel.app/auth/google";
+          }}
+        >
+          Continue with Google
+        </button>
         <p onClick={() => setForm("signup")} className='text-sm text-center text-gray-600 cursor-pointer'>Don't have an Account? <span className='text-indigo-600 font-medium hover:underline'>Sign up</span></p>
       </form>
     </div>
