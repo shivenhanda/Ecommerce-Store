@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 import { NewUser, WishListData, CartListData, Product, Order } from './Model.js'
+import passport from './passport.js'
 
 const connectDB = async () => {
     if (mongoose.connection.readyState === 1) {
@@ -28,6 +29,7 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(express.static(path.join(process.cwd(), "..", "frontend", "dist")))
 app.use(checkcookie)
+app.use(passport.initialize());
 
 function checkcookie(req, res, next) {
     try {
@@ -47,7 +49,23 @@ app.get("/api/profile", async (req, res) => {
     }
     return res.json({ success: false, user: null })
 })
-
+app.get("/auth/google", passport.authenticate("google", {
+    scope: ["profile", "email"]
+}))
+app.get("/auth/google/callback", passport.authenticate("google", {
+    session: false,
+    failureRedirect:
+        "https://ecommerce-store-tmzs.vercel.app/api/Login"
+}),
+    async (req, res) => {
+        let token = jwt.sign({ user:req.user.user }, "secret")
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        })
+        res.redirect("https://ecommerce-store-tmzs.vercel.app")
+    })
 app.post("/api/SignUp", async (req, res) => {
     try {
         const { user, email, password } = req.body
@@ -68,8 +86,8 @@ app.post("/api/SignUp", async (req, res) => {
         let token = jwt.sign({ user }, "secret")
         res.cookie("token", token, {
             httpOnly: true,
-            secure:true,
-            sameSite:"none"
+            secure: true,
+            sameSite: "none"
         })
         req.user = user
         return res.json({ success: true, message: "Signup Successfully", user: user })
@@ -94,8 +112,8 @@ app.post("/api/Login", async (req, res) => {
         let token = jwt.sign({ user }, "secret")
         res.cookie("token", token, {
             httpOnly: true,
-            secure:true,
-            sameSite:"none"
+            secure: true,
+            sameSite: "none"
         })
         req.user = user
         return res.json({ success: true, message: "Login Successfully", user: user })
@@ -106,10 +124,10 @@ app.post("/api/Login", async (req, res) => {
 })
 
 app.post("/api/logout", (req, res) => {
-    res.clearCookie("token",{
+    res.clearCookie("token", {
         httpOnly: true,
-        secure:true,
-        sameSite:"none"
+        secure: true,
+        sameSite: "none"
     });
     res.json({ success: true });
 });
@@ -173,13 +191,13 @@ app.post("/api/cartData", async (req, res) => {
             return res.json({ success: false, message: "no user" });
         }
         const { cartlist } = req.body;
-        console.log("backend",cartlist)
+        console.log("backend", cartlist)
         const data = await CartListData.findOneAndUpdate(
             { user },
             { cartlist },
             {
-                upsert:true,
-                new:true
+                upsert: true,
+                new: true
             }
         );
         console.log(data)
