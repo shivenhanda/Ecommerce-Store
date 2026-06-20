@@ -18,18 +18,18 @@ passport.use(new GoogleStrategy({
                 console.log(error)
             }
         }
-        let user=await NewUser.find({email:profile.email[0].value})
+        let user=await NewUser.findOne({email:profile.emails[0].value})
         if(!user){
             user=await NewUser.create({
                 user:profile.displayName,
-                email:profile.email[0].value,
+                email:profile.emails[0].value,
                 avatar:profile.photos?.[0]?.value
             })
         }
-        done(null,user)
+        cb(null,user)
     }
     catch(err){
-        done(err,null)
+        cb(err,null)
     }
   }
 ));
