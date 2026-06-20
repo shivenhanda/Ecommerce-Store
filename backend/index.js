@@ -58,7 +58,7 @@ app.get("/auth/google/callback", passport.authenticate("google", {
         "https://ecommerce-store-tmzs.vercel.app/api/Login"
 }),
     async (req, res) => {
-        let token = jwt.sign({ user:req.user.user }, "secret")
+        let token = jwt.sign({ user:req.user.user || null }, "secret")
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
