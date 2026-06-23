@@ -18,21 +18,6 @@
 
 ---
 
-## 📑 Table of Contents
-
-- [Description](#description)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Quick Start](#quick-start)
-- [Key Dependencies](#key-dependencies)
-- [Run Commands](#run-commands)
-- [Screenshots](#screenshots)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-
----
-
 ## 📝 Description
 
 Ecommerce-Store is a full-stack web application built using the MERN stack (MongoDB, Express.js, React.js, Node.js). It provides a seamless and secure online shopping experience with authentication, product management, and scalable backend architecture.
@@ -41,12 +26,15 @@ Ecommerce-Store is a full-stack web application built using the MERN stack (Mong
 
 ## ✨ Features
 
-- 🌐 RESTful API integration  
-- 🔐 Authentication using JWT  
-- 🔒 Password hashing with Bcrypt  
-- 📱 Fully responsive UI  
-- 🛒 Cart & Wishlist functionality  
-- 📦 Product & category management  
+- Secure user authentication
+- Google OAuth Sign-In
+- JWT-based authentication
+- Password hashing using Bcrypt
+- Product browsing and management
+- Cart functionality
+- Wishlist functionality
+- Responsive design
+- REST API integration
 
 ---
 
